@@ -166,7 +166,7 @@ export function allocateResources(
         justification: 'Without quality standards, resources could be wasted on poorly-defined tasks, reducing availability for everyone'
       }],
       metrics: {
-        fairnessScore: 0, // Not calculated yet
+        fairnessScore: 0, // Not relevant for coherence-based rejection; fairness not yet evaluated
         coherenceScore: waveAnalysis.coherence_score,
         priorityWeight: 0
       },
@@ -225,7 +225,7 @@ export function allocateResources(
         priorityWeight: 0
       },
       alternativeOptions: [
-        `Wait ${Math.ceil((86400000 - (Date.now() - new Date(recentUsage[0]?.createdAt || Date.now()).getTime())) / 3600000)} hours for your usage window to reset`,
+        `Wait ${Math.max(1, Math.ceil((86400000 - (Date.now() - new Date(recentUsage[0]?.createdAt || Date.now()).getTime())) / 3600000))} hours for your usage window to reset`,
         'Request a smaller allocation that fits within fairness constraints',
         'Use the native TypeScript quantum simulator for prototyping instead'
       ],
