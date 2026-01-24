@@ -30,11 +30,17 @@ export interface EthicalDecisionExplanation {
   userRights: string[];
 }
 
+/**
+ * Maximum number of allocations allowed per user quota
+ */
+export const MAX_ALLOCATIONS_LIMIT = 350;
+
 export interface ResourceQuota {
   userId: string;
   maxQubits: number;
   maxGateDepth: number;
   maxExecutionTimeMs: number;
+  maxAllocations: number; // Maximum number of allocations allowed (default: 350)
   priority: 'low' | 'medium' | 'high' | 'critical';
   allocatedAt: string;
   expiresAt?: string;
@@ -139,6 +145,12 @@ export function allocateResources(
   
   if (request.estimatedTimeMs > quota.maxExecutionTimeMs) {
     throw new Error(`Requested time (${request.estimatedTimeMs}ms) exceeds quota (${quota.maxExecutionTimeMs}ms)`);
+  }
+  
+  // Validate against max allocations limit (350 allowed)
+  const userAllocations = previousAllocations.filter(a => a.userId === userId);
+  if (userAllocations.length >= quota.maxAllocations) {
+    throw new Error(`Maximum allocations (${quota.maxAllocations}) reached for user ${userId}. You have used ${userAllocations.length} of ${quota.maxAllocations} allowed allocations.`);
   }
   
   // Analyze purpose for coherence
@@ -309,6 +321,7 @@ export function createResourceQuota(
     maxQubits: Math.floor(50 * weight),
     maxGateDepth: Math.floor(100 * weight),
     maxExecutionTimeMs: Math.floor(3600000 * weight), // 1 hour base
+    maxAllocations: MAX_ALLOCATIONS_LIMIT, // 350 allocations allowed
     priority: weight > 1.2 ? 'high' : weight > 1.0 ? 'medium' : 'low',
     allocatedAt: new Date().toISOString()
   };
