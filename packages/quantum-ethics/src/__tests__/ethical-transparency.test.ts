@@ -9,8 +9,7 @@ import {
   allocateResources,
   createResourceQuota,
   explainEthicalPolicy,
-  DEFAULT_POLICY,
-  type EthicalDecisionExplanation
+  DEFAULT_POLICY
 } from '../resource-allocation';
 
 describe('Ethical Transparency', () => {

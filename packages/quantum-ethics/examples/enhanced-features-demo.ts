@@ -115,7 +115,7 @@ console.log('  Note: Requires Python3 and qiskit installation\n');
 
 // 6. Resource Allocation with Provenance
 console.log('--- Resource Allocation ---');
-const { allocation, waveAnalysis } = framework.requestResources(
+const { allocation, waveAnalysis, ethicalExplanation } = framework.requestResources(
   'user-123',
   {
     qubits: 10,
@@ -135,12 +135,12 @@ if (allocation) {
       resourceType: 'quantum_compute',
       resourceAmount: {
         qubits: allocation.qubits,
-        gateDepth: allocation.maxGateDepth,
-        timeMs: allocation.maxTimeMs
+        gateDepth: allocation.gateDepth,
+        timeMs: allocation.estimatedTimeMs
       },
       fairnessScore: allocation.fairnessScore,
       coherenceScore: waveAnalysis.coherence_score,
-      purpose: allocation.purpose,
+      purpose: 'Quantum machine learning research for drug discovery optimization with ethical constraints',
       approved: true
     }
   );
