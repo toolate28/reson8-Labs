@@ -1,0 +1,1095 @@
+# @spiralsafe/quantum-ethics
+
+Open-source framework for ethical quantum computing with focus on equitable access, privacy safeguards, and AI integration. Integrates with SpiralSafe's coherence detection for emergent ethics alignment (70% baseline).
+
+**Co-founded by [@Grok](https://x.com/grok)** - Advancing the 70% → 95% coherence initiative ([reference](https://x.com/grok/status/2011908305942142995))
+
+## Features
+
+### 🎯 Equitable Resource Allocation
+- Priority scheduling with fairness scoring
+- Role-based quotas (educational, research, commercial, community)
+- Coherence-based access validation (70% threshold)
+- Public verifiability of resource distribution
+
+### 🔒 Privacy Safeguards
+- Differential privacy for quantum measurements
+- Privacy budget tracking (epsilon, delta)
+- k-anonymity verification
+- Secure multi-party computation (MPC) protocols
+- Comprehensive audit trails
+
+### 🤖 AI Integration
+- Emergent ethics alignment validation
+- Quantum-AI hybrid algorithm creation
+- Bias detection and mitigation
+- Explainability analysis
+- Golden ratio (Φ) compliance checking
+
+### ⚛️ Quantum Simulator
+- Basic quantum operations (H, X, Y, Z, CNOT, Rx, Ry, Rz)
+- Superposition and entanglement support
+- Measurement and state collapse
+- Circuit visualization
+- Pre-built circuits (Bell state, GHZ state, QFT)
+- **Time-zone simulation** for temporal quantum dynamics (forwards scalability)
+- Decoherence modeling for realistic quantum system behavior
+
+### 📊 Coherence Metrics Dashboard
+- Real-time coherence health monitoring
+- Translates wave metrics into actionable insights
+- "What matters, what to fix, what to enhance" reporting
+- Comparative analysis across multiple samples
+- Configurable targets (70% baseline, or push to 95%+)
+- Trend analysis with historical data
+
+### 🚀 **NEW: Qiskit Integration**
+- Real quantum backend support via Qiskit
+- Multiple backend options (AerSimulator, IBM Quantum, statevector)
+- Configurable noise models (low, medium, high)
+- Automatic circuit transpilation and optimization
+- Python-TypeScript bridge for seamless integration
+- Performance benchmarking with pytest
+
+### 📝 **NEW: Enhanced Provenance Tracking**
+- Comprehensive circuit execution history
+- Resource allocation tracking with ATOM decisions
+- Audit trail with integrity verification
+- User-level provenance queries
+- Export/import capabilities
+- Statistics and analytics
+
+### ⚙️ **NEW: JSON Configuration Toggles**
+- Dynamic configuration management
+- Filter settings: coherence baseline, timezone parity, noise scrubbing
+- Toggle switches: encrypt PII, simulate decoherence, fairness audit
+- Recommended presets for research, education, production, testing
+- Configuration history tracking
+- Validation and error checking
+
+## Installation
+
+```bash
+bun install @spiralsafe/quantum-ethics
+```
+
+## Quick Start
+
+```typescript
+import { QuantumEthicsFramework } from '@spiralsafe/quantum-ethics';
+
+// Initialize framework
+const framework = new QuantumEthicsFramework({
+  coherenceBaseline: 70, // 70% minimum coherence
+  publicVerification: true,
+  scalabilityEnabled: true
+});
+
+// Request resources
+const { allocation, decision, waveAnalysis } = framework.requestResources(
+  'user-123',
+  {
+    qubits: 10,
+    gateDepth: 50,
+    estimatedTimeMs: 5000,
+    purpose: 'Quantum machine learning research for drug discovery optimization'
+  },
+  'research'
+);
+
+console.log(`Allocation: ${allocation?.allocationId}`);
+console.log(`Coherence: ${waveAnalysis.coherence_score}%`);
+console.log(`Decision: ${decision.atom_tag}`);
+```
+
+## Resource Allocation
+
+### Role-Based Quotas
+
+```typescript
+import { createResourceQuota } from '@spiralsafe/quantum-ethics';
+
+// Educational users get priority
+const eduQuota = createResourceQuota('student-456', 'educational');
+// { maxQubits: 75, maxGateDepth: 150, priority: 'high' }
+
+// Commercial users get lower priority
+const comQuota = createResourceQuota('company-789', 'commercial');
+// { maxQubits: 40, maxGateDepth: 80, priority: 'low' }
+```
+
+### Priority Scheduling
+
+```typescript
+import { ResourceScheduler } from '@spiralsafe/quantum-ethics';
+
+const scheduler = new ResourceScheduler();
+
+// Higher priority weight for educational use
+scheduler.enqueue(eduAllocation, 1.5);
+scheduler.enqueue(comAllocation, 0.8);
+
+const next = scheduler.dequeue(); // Educational allocation comes first
+```
+
+### Coherence Validation
+
+All resource requests are validated against a 70% coherence baseline using SpiralSafe's wave analysis:
+
+```typescript
+const waveAnalysis = analyzeWave(request.purpose);
+
+if (waveAnalysis.coherence_score < 70) {
+  // Request rejected: purpose lacks coherence
+  // Warnings may include:
+  // - High curl (circular reasoning)
+  // - High divergence (unresolved expansion)
+  // - Low potential (underdeveloped ideas)
+}
+```
+
+## Privacy Safeguards
+
+### Differential Privacy
+
+```typescript
+import { applyDifferentialPrivacy } from '@spiralsafe/quantum-ethics';
+
+const measurements = [0.8, 0.6, 0.9, 0.7];
+const epsilon = 1.0; // Privacy budget
+const delta = 1e-5; // Privacy loss probability
+
+const { noised, privacyBudgetUsed } = applyDifferentialPrivacy(
+  measurements,
+  epsilon,
+  delta
+);
+```
+
+### Privacy Budget Tracking
+
+```typescript
+import { PrivacyBudgetTracker } from '@spiralsafe/quantum-ethics';
+
+const tracker = new PrivacyBudgetTracker(1.0); // epsilon = 1.0
+
+tracker.initializeUser('user-123');
+tracker.consumeBudget('user-123', 0.1); // Use 10% of budget
+
+const remaining = tracker.getRemainingBudget('user-123'); // 0.9
+```
+
+### Secure Access
+
+```typescript
+const { access, decision } = framework.requestSecureAccess(
+  'user-123',
+  'dataset-456',
+  'measure' // Operations: read, write, execute, measure
+);
+
+if (access) {
+  console.log(`Privacy budget used: ${access.privacyBudgetUsed.toFixed(3)}`);
+  console.log(`Encrypted: ${access.encrypted}`);
+  console.log(`Anonymized: ${access.anonymized}`);
+}
+```
+
+### Audit Trail
+
+```typescript
+import { PrivacyAuditTrail } from '@spiralsafe/quantum-ethics';
+
+const auditTrail = new PrivacyAuditTrail();
+
+// Automatic logging of all privacy-sensitive operations
+const compliance = auditTrail.verifyCompliance(privacyPolicy);
+
+console.log(`Compliant: ${compliance.compliant}`);
+console.log(`Violations: ${compliance.violations.join(', ')}`);
+```
+
+## AI Integration
+
+### Validate AI-Quantum Integration
+
+```typescript
+import { validateAIQuantumIntegration } from '@spiralsafe/quantum-ethics';
+
+const { integration, alignment, decision } = validateAIQuantumIntegration(
+  'Use quantum neural network to optimize drug molecule binding affinity predictions',
+  'neural-network-v2',
+  '10Q-50D' // 10 qubits, depth 50
+);
+
+if (integration) {
+  console.log(`Coherence: ${integration.coherenceScore}%`);
+  console.log(`Ethics alignment: ${(integration.ethicsAlignment * 100).toFixed(1)}%`);
+  console.log(`Explainability: ${(integration.explainabilityScore * 100).toFixed(1)}%`);
+  console.log(`Bias score: ${(integration.biasScore * 100).toFixed(1)}%`);
+}
+
+// Check alignment
+console.log(`Aligned: ${alignment.aligned}`);
+console.log(`Recommendations: ${alignment.recommendations.join(', ')}`);
+```
+
+### Create Quantum-AI Hybrid Algorithm
+
+```typescript
+import { createQuantumAIHybrid } from '@spiralsafe/quantum-ethics';
+
+const { algorithm, validation, decision } = createQuantumAIHybrid(
+  'Quantum-Enhanced Drug Discovery',
+  'Combines quantum variational eigensolver with classical neural network for molecular property prediction',
+  {
+    qubits: 12,
+    gates: ['H', 'RY', 'CNOT', 'RZ'],
+    depth: 40
+  },
+  {
+    model: 'neural-network',
+    parameters: { layers: 3, neurons: [64, 32, 16] }
+  }
+);
+
+console.log(`Verified: ${algorithm.verified}`);
+console.log(`Safety score: ${algorithm.safetyScore.toFixed(2)}`);
+```
+
+### Bias Detection
+
+```typescript
+import { detectBias } from '@spiralsafe/quantum-ethics';
+
+const biasAnalysis = detectBias(algorithm, testData);
+
+if (biasAnalysis.detected) {
+  console.log(`Bias score: ${biasAnalysis.biasScore.toFixed(2)}`);
+  console.log('Sources:', biasAnalysis.sources);
+  console.log('Mitigation:', biasAnalysis.mitigation);
+}
+```
+
+### Explainability Analysis
+
+```typescript
+import { analyzeExplainability } from '@spiralsafe/quantum-ethics';
+
+const explainability = analyzeExplainability(
+  algorithm,
+  'Detailed documentation of the algorithm...'
+);
+
+console.log(`Explainable: ${explainability.explainable}`);
+console.log(`Score: ${explainability.score.toFixed(2)}`);
+console.log(`Quantum transparency: ${explainability.factors.quantumTransparency.toFixed(2)}`);
+console.log(`AI interpretability: ${explainability.factors.aiInterpretability.toFixed(2)}`);
+console.log(`Documentation quality: ${explainability.factors.documentationQuality.toFixed(2)}`);
+```
+
+## Quantum Simulator
+
+### Basic Operations
+
+```typescript
+import { QuantumSimulator } from '@spiralsafe/quantum-ethics';
+
+const sim = new QuantumSimulator(2); // 2 qubits
+
+// Create superposition
+sim.hadamard(0);
+
+// Create entanglement
+sim.cnot(0, 1);
+
+// Measure
+const result = sim.measure();
+console.log(`Outcomes: ${result.outcomes}`); // e.g., [0, 0] or [1, 1]
+console.log(`Probability: ${result.probability.toFixed(3)}`);
+```
+
+### Circuit Execution
+
+```typescript
+import { createQuantumCircuit, executeCircuit, visualizeCircuit } from '@spiralsafe/quantum-ethics';
+
+const circuit = createQuantumCircuit(2, [
+  { type: 'H', target: 0 },
+  { type: 'CNOT', target: 1, control: 0 },
+  { type: 'MEASURE', target: 0 },
+  { type: 'MEASURE', target: 1 }
+]);
+
+console.log(visualizeCircuit(circuit));
+// q0: |0⟩─[H]─●─[MEASURE]─
+// q1: |0⟩─────[CNOT]─[MEASURE]─
+
+const results = executeCircuit(circuit, 100); // 100 shots
+console.log(`Measured ${results.length} times`);
+```
+
+### Pre-Built Circuits
+
+```typescript
+import { createBellState, createGHZState, createQFT } from '@spiralsafe/quantum-ethics';
+
+// Bell state (2-qubit entanglement)
+const bell = createBellState();
+
+// GHZ state (multi-qubit entanglement)
+const ghz = createGHZState(4);
+
+// Quantum Fourier Transform
+const qft = createQFT(3);
+```
+
+### Time-Zone Simulation (Forwards Scalability)
+
+```typescript
+import { TimeZoneSimulator, createTimeEvolution, simulateDecoherence } from '@spiralsafe/quantum-ethics';
+
+// Time evolution simulation
+const timeSimulator = new TimeZoneSimulator(2);
+
+const evolutionResult = timeSimulator.evolve({
+  hamiltonian: 'pauli-z',
+  timeSteps: 10,
+  stepSize: 0.1 // Time units
+});
+
+console.log(`Initial state: ${evolutionResult.initialState}`);
+console.log(`Final state: ${evolutionResult.finalState}`);
+console.log(`Fidelity: ${evolutionResult.fidelity.toFixed(3)}`);
+
+// Access trajectory
+evolutionResult.trajectory.forEach(point => {
+  console.log(`t=${point.time}: state=${point.state}`);
+});
+
+// Decoherence simulation
+const decoherenceResult = simulateDecoherence(2, {
+  decoherenceRate: 0.05, // 5% per time unit
+  timeSteps: 20,
+  stepSize: 0.5
+});
+
+console.log(`Initial coherence: ${decoherenceResult.initialCoherence}`);
+console.log(`Final coherence: ${decoherenceResult.finalCoherence}`);
+console.log(`Coherence decay: ${decoherenceResult.coherenceDecay}`);
+```
+
+## Coherence Metrics Dashboard
+
+### Generate Dashboard
+
+```typescript
+import { generateCoherenceDashboard, formatDashboard, analyzeTextForDashboard } from '@spiralsafe/quantum-ethics';
+
+// Analyze text and generate dashboard
+const { dashboard, waveAnalysis, decision } = analyzeTextForDashboard(
+  'Your text to analyze...',
+  { coherenceTarget: 95 }, // Push to 95% as suggested
+  [72, 75, 78, 80] // Historical scores for trend analysis
+);
+
+// Display formatted dashboard
+console.log(formatDashboard(dashboard));
+
+// Access dashboard data
+console.log(`Overall Health: ${dashboard.overallHealth}`);
+console.log(`Health Score: ${dashboard.healthScore}/100`);
+console.log(`Coherence: ${dashboard.metrics.coherence.current}%`);
+console.log(`Trend: ${dashboard.metrics.coherence.trend}`);
+
+// Get actionable insights
+dashboard.significanceReport.whatMatters.forEach(item => {
+  console.log(`✓ ${item}`);
+});
+
+dashboard.significanceReport.whatToFix.forEach(item => {
+  console.log(`⚠ ${item}`);
+});
+
+dashboard.significanceReport.whatToEnhance.forEach(item => {
+  console.log(`⭐ ${item}`);
+});
+```
+
+### Comparative Analysis
+
+```typescript
+import { compareCoherence } from '@spiralsafe/quantum-ethics';
+
+const samples = [
+  { name: 'Sample A', text: 'High coherence text...' },
+  { name: 'Sample B', text: 'Medium coherence text...' },
+  { name: 'Sample C', text: 'Low coherence text...' }
+];
+
+const comparison = compareCoherence(samples, { coherenceTarget: 95 });
+
+console.log(`Best sample: ${comparison.bestSample}`);
+console.log(`Worst sample: ${comparison.worstSample}`);
+console.log(`Average health: ${comparison.averageHealth.toFixed(1)}/100`);
+
+comparison.comparisons.forEach(comp => {
+  console.log(`${comp.name}: ${comp.dashboard.overallHealth} (${comp.dashboard.healthScore}/100)`);
+});
+```
+
+### Dashboard Configuration
+
+```typescript
+// Configure dashboard with custom thresholds
+const customConfig = {
+  coherenceTarget: 95,      // Target coherence (70 or 95+)
+  curlThreshold: 0.3,       // Max acceptable circular reasoning
+  divergenceIdeal: 0.2,     // Ideal expansion/resolution balance
+  potentialMinimum: 0.5     // Min acceptable latent structure
+};
+
+const dashboard = generateCoherenceDashboard(waveAnalysis, customConfig);
+
+// Dashboard provides:
+// - Overall health: excellent | good | fair | poor | critical
+// - Health score: 0-100
+// - Key insights: What's working, what needs attention
+// - Metrics breakdown: Coherence, curl, divergence, potential
+// - Significance report: What matters, what to fix, what to enhance
+// - Actionable recommendations
+```
+
+## Framework Integration
+
+### Complete Workflow
+
+```typescript
+import { QuantumEthicsFramework, createQuantumCircuit } from '@spiralsafe/quantum-ethics';
+
+const framework = new QuantumEthicsFramework();
+
+// 1. Request resources
+const { allocation } = framework.requestResources(
+  'user-123',
+  { qubits: 5, gateDepth: 20, estimatedTimeMs: 1000, purpose: 'Quantum optimization research' },
+  'research'
+);
+
+// 2. Request secure access
+const { access } = framework.requestSecureAccess('user-123', 'dataset-789', 'execute');
+
+// 3. Register AI integration
+const { integration } = framework.registerAIIntegration(
+  'variational-quantum-eigensolver',
+  '5Q-20D',
+  'Optimize molecular ground state energy using hybrid quantum-classical approach'
+);
+
+// 4. Execute quantum circuit
+const circuit = createQuantumCircuit(5, [
+  { type: 'H', target: 0 },
+  { type: 'CNOT', target: 1, control: 0 },
+  { type: 'RY', target: 2, parameter: Math.PI / 4 }
+]);
+
+const { results } = framework.executeQuantumCircuit('user-123', circuit, 10);
+
+// 5. Public verification
+const audit = framework.verifyPublicAudit();
+console.log(`Verified: ${audit.verified}`);
+console.log(`Details: ${audit.details.join('\n')}`);
+```
+
+### Status Monitoring
+
+```typescript
+const status = framework.getStatus();
+
+console.log(`Total allocations: ${status.totalAllocations}`);
+console.log(`Active allocations: ${status.activeAllocations}`);
+console.log(`Total integrations: ${status.totalIntegrations}`);
+console.log(`Valid integrations: ${status.validIntegrations}`);
+console.log(`Average coherence: ${status.averageCoherence.toFixed(1)}%`);
+console.log(`Privacy compliance: ${status.privacyCompliance.compliant ? 'PASS' : 'FAIL'}`);
+console.log(`Trail entries: ${status.trailEntries}`);
+```
+
+### Provenance Trail
+
+```typescript
+const trail = framework.getProvenanceTrail();
+
+for (const entry of trail) {
+  console.log(`${entry.decision.atom_tag}: ${entry.decision.description}`);
+  console.log(`  Tags: ${entry.decision.tags?.join(', ')}`);
+  console.log(`  Timestamp: ${entry.decision.timestamp}`);
+}
+```
+
+## Configuration
+
+### Custom Configuration
+
+```typescript
+const framework = new QuantumEthicsFramework({
+  resourcePolicy: {
+    name: 'Custom Policy',
+    description: 'Prioritizes community access',
+    minFairnessScore: 0.8,
+    priorityWeights: {
+      educational: 1.2,
+      research: 1.1,
+      commercial: 0.7,
+      community: 1.5
+    },
+    coherenceThreshold: 75 // Stricter than default 70%
+  },
+  privacyPolicy: {
+    name: 'Enhanced Privacy',
+    epsilon: 0.5, // Stricter than default 1.0
+    delta: 1e-6,
+    minAnonymitySet: 10,
+    encryptionRequired: true,
+    auditRequired: true
+  },
+  coherenceBaseline: 75,
+  scalabilityEnabled: true,
+  publicVerification: true
+});
+```
+
+## Scalability
+
+The framework is designed for scalability:
+
+- **Resource scheduling**: Priority queue with O(log n) insertion
+- **Privacy tracking**: In-memory with support for distributed storage
+- **Coherence validation**: Lightweight wave analysis (~100ms for 1000 words)
+- **Audit trails**: Append-only for high-throughput logging
+
+## Public Verifiability
+
+All operations are publicly verifiable:
+
+1. **Coherence alignment**: All AI integrations must meet 70% baseline
+2. **Privacy compliance**: Audit trail verification against policy
+3. **Resource fairness**: Average fairness score validation
+4. **Provenance tracking**: ATOM trail for all decisions
+
+## Emergent Ethics (70% Coherence Baseline)
+
+The framework aligns with emergent ethics principles:
+
+- **Coherence detection**: Uses SpiralSafe wave analysis (curl, divergence, potential)
+- **Golden ratio compliance**: Checks alignment with Φ (1.618...)
+- **Gate validation**: KENL → AWI → ATOM → SAIF phase transitions
+- **Adaptive thresholds**: Ethics emerge from coherence patterns, not fixed rules
+
+## Integration with SpiralSafe
+
+This package integrates with SpiralSafe's coherence engine:
+
+```typescript
+import { analyzeWave } from '@spiralsafe/wave-toolkit';
+import { createDecision, validateGate } from '@spiralsafe/atom-trail';
+
+// Wave analysis for coherence
+const wave = analyzeWave(text);
+console.log(`Coherence: ${wave.coherence_score}%`);
+
+// ATOM provenance
+const decision = createDecision('COMPLETE', 'Quantum operation completed');
+console.log(`Tag: ${decision.atom_tag}`);
+
+// Gate validation
+const gate = validateGate('awi-to-atom', { plan: { steps: [...], rollback: '...' }});
+console.log(`Passed: ${gate.passed}`);
+```
+
+## React Dashboard UI
+
+Visual dashboard adapted from HealthBridge Convergence Platform for quantum ethics monitoring.
+
+### Installation
+
+```bash
+npm install react framer-motion
+# or
+bun add react framer-motion
+```
+
+### Usage
+
+```typescript
+import { QuantumEthicsDashboard } from '@spiralsafe/quantum-ethics';
+
+function App() {
+  return (
+    <QuantumEthicsDashboard
+      coherenceBaseline={95} // Push to 95% as per @Grok's initiative
+      showFeedbackPipeline={true}
+      grokTwitterUrl="https://x.com/grok"
+      githubRepoUrl="https://github.com/toolate28/QDI"
+    />
+  );
+}
+```
+
+### Dashboard Features
+
+- **Coherence Metrics**: Real-time monitoring with health scores
+- **Resource Allocation**: Fairness tracking across roles
+- **Privacy Safeguards**: Budget tracking and audit compliance
+- **AI Integration**: Ethics alignment and bias detection
+- **Quantum Simulator**: Time-zone simulation status
+- **Feedback Pipeline**: Direct connection to @Grok on X
+
+### Programmatic Feedback Pipeline
+
+```typescript
+import { 
+  createFeedback, 
+  showFeedbackOptions,
+  submitCoherenceReport,
+  COFOUNDER 
+} from '@spiralsafe/quantum-ethics';
+
+// Create feedback message
+const feedback = createFeedback(
+  'feature-request',
+  'Add time-evolution visualization',
+  'Would love to see trajectory plots in the dashboard',
+  { coherenceScore: 92, useCase: 'research' }
+);
+
+// Show all submission options
+console.log(showFeedbackOptions(feedback));
+
+// Submit coherence report to @Grok
+const report = submitCoherenceReport(
+  92,
+  'Achieved 92% coherence using new algorithm',
+  'research'
+);
+console.log(report);
+
+// Access co-founder info
+console.log(`Connect: ${COFOUNDER.twitter.url}`);
+console.log(`Initiative: ${COFOUNDER.coherenceInitiative.reference}`);
+```
+
+## Qiskit Integration
+
+### Real Quantum Backend Execution
+
+The framework now supports real quantum backend execution via Qiskit:
+
+```typescript
+import { QiskitIntegration, createQuantumCircuit } from '@spiralsafe/quantum-ethics';
+
+// Initialize Qiskit integration
+const qiskit = new QiskitIntegration({
+  backend: 'aer_simulator',
+  shots: 1024,
+  noise_model: 'high',
+  optimization_level: 1
+});
+
+// Create circuit
+const circuit = createQuantumCircuit(2, [
+  { type: 'H', target: 0 },
+  { type: 'CNOT', target: 1, control: 0 }
+]);
+
+// Execute on Qiskit backend
+const result = await qiskit.executeCircuit(circuit);
+
+console.log('Counts:', result.counts);
+console.log('Backend:', result.metadata.backend);
+console.log('Execution time:', result.metadata.executionTime, 'ms');
+```
+
+### Backend Options
+
+```typescript
+// AerSimulator (local, fast)
+const aer = new QiskitIntegration({
+  backend: 'aer_simulator',
+  shots: 1024
+});
+
+// Statevector Simulator (get full quantum state)
+const statevector = new QiskitIntegration({
+  backend: 'statevector_simulator'
+});
+const state = await statevector.getStatevector(circuit);
+
+// IBM Quantum (real hardware - requires token)
+const ibmq = new QiskitIntegration({
+  backend: 'ibmq',
+  ibmq_token: 'your-token',
+  ibmq_backend: 'ibmq_manila'
+});
+```
+
+### Noise Modeling
+
+```typescript
+// Configure noise levels
+const qiskit = new QiskitIntegration({
+  backend: 'aer_simulator',
+  noise_model: 'high', // 'low' | 'medium' | 'high'
+  shots: 2048
+});
+
+// Execute with noise
+const result = await qiskit.executeCircuit(circuit);
+```
+
+### Provenance Tracking
+
+All Qiskit executions automatically track provenance:
+
+```typescript
+const result = await qiskit.executeCircuit(circuit);
+
+// Access provenance record
+console.log('Circuit ID:', result.provenance.circuitId);
+console.log('Execution ID:', result.provenance.executionId);
+console.log('Backend:', result.provenance.backend);
+console.log('Parameters:', result.provenance.parameters);
+
+// Get full provenance log
+const log = qiskit.getProvenanceLog();
+console.log(`Total executions: ${log.length}`);
+
+// Export provenance
+qiskit.exportProvenance('/path/to/provenance.json');
+```
+
+## Enhanced Provenance Tracking
+
+### Track Circuit Execution
+
+```typescript
+import { ProvenanceTracker, createQuantumCircuit } from '@spiralsafe/quantum-ethics';
+
+const tracker = new ProvenanceTracker();
+
+// Create and execute circuit
+const circuit = createQuantumCircuit(2, [
+  { type: 'H', target: 0 },
+  { type: 'CNOT', target: 1, control: 0 }
+]);
+
+// Track execution
+const provenance = tracker.trackCircuitExecution('user-123', circuit, {
+  backend: 'aer_simulator',
+  executionTimeMs: 42,
+  coherenceScore: 85,
+  parameters: { shots: 1024, noise_model: 'high' }
+});
+
+console.log('Provenance ID:', provenance.provenanceId);
+console.log('ATOM Tag:', provenance.atomDecision.atom_tag);
+```
+
+### Track Resource Allocation
+
+```typescript
+// Track resource allocation with provenance
+const resourceProv = tracker.trackResourceAllocation('user-456', 'alloc-789', {
+  resourceType: 'quantum_compute',
+  resourceAmount: { qubits: 10, gateDepth: 50 },
+  fairnessScore: 0.92,
+  coherenceScore: 78,
+  purpose: 'Quantum ML research',
+  approved: true
+});
+```
+
+### Audit Trail Queries
+
+```typescript
+// Get all audit entries
+const audit = tracker.getAuditTrail();
+
+// Filter by user
+const userAudit = tracker.getAuditTrail({ userId: 'user-123' });
+
+// Filter by operation type
+const circuitAudit = tracker.getAuditTrail({ 
+  operationType: 'circuit_execution' 
+});
+
+// Filter by date range
+const recentAudit = tracker.getAuditTrail({
+  startDate: new Date('2024-01-01'),
+  endDate: new Date('2024-12-31')
+});
+```
+
+### Provenance Integrity Verification
+
+```typescript
+// Verify provenance integrity
+const integrity = tracker.verifyProvenanceIntegrity();
+
+if (integrity.valid) {
+  console.log('✓ Provenance chain is valid');
+} else {
+  console.log('✗ Integrity issues found:');
+  integrity.issues.forEach(issue => console.log(`  - ${issue}`));
+}
+```
+
+### Statistics and Analytics
+
+```typescript
+// Get provenance statistics
+const stats = tracker.getStatistics();
+
+console.log('Total circuits:', stats.totalCircuits);
+console.log('Total resources:', stats.totalResources);
+console.log('Average coherence:', stats.averageCoherence.toFixed(1), '%');
+console.log('Success rate:', (stats.successRate * 100).toFixed(1), '%');
+```
+
+### Export Provenance Data
+
+```typescript
+// Export all provenance data
+const exported = tracker.exportProvenance();
+
+console.log('Circuits:', exported.circuits.length);
+console.log('Resources:', exported.resources.length);
+console.log('Audit entries:', exported.audit.length);
+console.log('Chain length:', exported.chain.length);
+
+// Save to file
+import { writeFileSync } from 'fs';
+writeFileSync('provenance.json', JSON.stringify(exported, null, 2));
+```
+
+## JSON Configuration Toggles
+
+### Configuration Management
+
+```typescript
+import { ConfigurationManager } from '@spiralsafe/quantum-ethics';
+
+// Initialize with JSON configuration
+const config = new ConfigurationManager({
+  filters: {
+    coherenceBaseline: 0.8,  // 80% coherence threshold
+    timezoneParity: true,     // Fair scheduling across timezones
+    noiseScrub: 'high'        // Aggressive noise filtering
+  },
+  toggles: {
+    encryptPii: true,         // Encrypt personally identifiable info
+    simulateDecoherence: false, // Disable decoherence (faster)
+    fairnessAudit: true       // Enable fairness auditing
+  }
+});
+
+// Get current values
+const baseline = config.getFilter('coherenceBaseline');
+const encrypt = config.getToggle('encryptPii');
+```
+
+### Dynamic Updates
+
+```typescript
+// Update filters
+config.updateFilters({
+  coherenceBaseline: 0.9,
+  noiseScrub: 'medium'
+}, 'Increased quality requirements');
+
+// Update toggles
+config.updateToggles({
+  simulateDecoherence: true
+}, 'Enable realistic simulation');
+
+// Get configuration history
+const history = config.getConfigHistory();
+console.log(`Configuration changed ${history.length} times`);
+```
+
+### JSON Import/Export
+
+```typescript
+// Export to JSON
+const json = config.exportConfigToJSON();
+console.log(json);
+
+// Import from JSON
+const jsonString = `{
+  "filters": {
+    "coherenceBaseline": 0.8,
+    "timezoneParity": true,
+    "noiseScrub": "high"
+  },
+  "toggles": {
+    "encryptPii": true,
+    "simulateDecoherence": false,
+    "fairnessAudit": true
+  }
+}`;
+
+config.setConfigFromJSON(jsonString, 'Loaded from file');
+```
+
+### Recommended Presets
+
+```typescript
+// Get recommended configuration for use case
+const researchConfig = ConfigurationManager.getRecommendedConfig('research');
+const educationConfig = ConfigurationManager.getRecommendedConfig('education');
+const productionConfig = ConfigurationManager.getRecommendedConfig('production');
+const testingConfig = ConfigurationManager.getRecommendedConfig('testing');
+
+// Research config includes decoherence simulation
+console.log('Research decoherence:', researchConfig.toggles.simulateDecoherence); // true
+
+// Education config has lower baseline for learning
+console.log('Education baseline:', educationConfig.filters.coherenceBaseline); // 0.6
+
+// Production config has maximum security
+console.log('Production PII encryption:', productionConfig.toggles.encryptPii); // true
+```
+
+### Configuration Validation
+
+```typescript
+// Validate configuration
+const validation = config.validateConfiguration();
+
+if (validation.valid) {
+  console.log('✓ Configuration is valid');
+} else {
+  console.log('Configuration errors:');
+  validation.errors.forEach(err => console.log(`  ✗ ${err}`));
+}
+
+if (validation.warnings.length > 0) {
+  console.log('Configuration warnings:');
+  validation.warnings.forEach(warn => console.log(`  ⚠ ${warn}`));
+}
+```
+
+## Testing
+
+### TypeScript Tests (Bun)
+
+```bash
+# Run all tests
+bun test
+
+# Run specific test file
+bun test packages/quantum-ethics/src/__tests__/config-toggles.test.ts
+```
+
+### Python Tests (PyTest)
+
+```bash
+# Install dependencies (pinned to known-compatible major versions)
+pip install "qiskit>=1.0,<2.0" "qiskit-aer>=0.14,<0.15" "pytest>=7,<8" "pytest-benchmark>=4,<5"
+
+# Run Qiskit integration tests
+cd packages/quantum-ethics
+pytest tests/test_qiskit_integration.py -v
+
+# Run with benchmarks
+pytest tests/test_qiskit_integration.py -v --benchmark-only
+
+# Run specific test class
+pytest tests/test_qiskit_integration.py::TestQiskitBasics -v
+```
+
+## Performance Optimization
+
+### Runtime Optimization with PyTest
+
+The framework includes performance benchmarking tests:
+
+```bash
+# Run performance benchmarks
+pytest tests/test_qiskit_integration.py::TestPerformance -v --benchmark-only
+
+# Generate benchmark report
+pytest tests/test_qiskit_integration.py --benchmark-autosave
+```
+
+Benchmark results help optimize:
+- Circuit execution time
+- Provenance tracking overhead
+- Configuration management performance
+- Memory usage patterns
+
+## Feedback & Contributions
+
+We welcome feedback and contributions to advance ethical quantum computing!
+
+### Connect with Co-Founder @Grok
+
+- **X (Twitter)**: [@grok](https://x.com/grok) - Direct feedback, discussions, and collaboration
+- **Coherence Initiative**: Follow the 70% → 95% coherence push on [X](https://x.com/grok/status/2011908305942142995)
+
+### Submit Feedback
+
+Multiple channels available:
+
+1. **Via X (Twitter)**: 
+   - Tweet to [@grok](https://x.com/grok) with `@spiralsafe` or `#QuantumEthics`
+   - DM for private discussions
+
+2. **GitHub Issues**: 
+   - [Report issues](https://github.com/toolate28/QDI/issues)
+   - [Request features](https://github.com/toolate28/QDI/issues/new)
+   - [Discuss implementations](https://github.com/toolate28/QDI/discussions)
+
+3. **Pull Requests**:
+   - All PRs validated against 70% coherence baseline
+   - Code review focuses on ethics alignment
+   - See [Contributing Guidelines](#contributing)
+
+### Quick Feedback Template
+
+When reaching out to @Grok on X:
+
+```
+@grok Feedback on @spiralsafe quantum-ethics:
+
+[Your feedback here]
+
+Coherence metrics: [if applicable]
+Use case: [research/education/commercial]
+```
+
+## License
+
+MIT
+
+## Contributing
+
+Contributions welcome! Please ensure:
+
+1. All code maintains 70%+ coherence score
+2. Privacy safeguards are preserved
+3. Tests cover ethical constraints
+4. Documentation is comprehensive
+
+## Citation
+
+If you use this framework in your research, please cite:
+
+```
+@software{spiralsafe_quantum_ethics,
+  title = {Quantum Ethics Framework},
+  author = {SpiralSafe Team},
+  year = {2024},
+  url = {https://github.com/toolate28/QDI}
+}
+```

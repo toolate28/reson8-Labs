@@ -1,0 +1,22 @@
+{
+  "name": "spiralsafe",
+  "private": true,
+  "type": "module",
+  "workspaces": ["apps/*", "packages/*"],
+  "scripts": {
+    "setup": "bun run scripts/setup.ts",
+    "setup:check": "bun run scripts/setup.ts --check",
+    "build": "bun run --filter '*' build",
+    "dev": "bun run --filter '*' dev",
+    "test": "bun test",
+    "lint": "biome check .",
+    "optimize": "bun run apps/mcp-server/scripts/optimize.ts",
+    "dashboard": "bun run .claude/hooks/viewer/server.ts"
+  },
+  "devDependencies": {
+    "@anthropic-ai/claude-agent-sdk": "latest",
+    "@biomejs/biome": "^2.3.11",
+    "@types/bun": "latest",
+    "typescript": "^5.3.0"
+  }
+}
