@@ -16,9 +16,11 @@ import {
   createResourceQuota,
   ResourceScheduler,
   DEFAULT_POLICY as DEFAULT_RESOURCE_POLICY,
+  explainEthicalPolicy,
   type ResourceAllocation,
   type ResourceQuota,
-  type EquitableAccessPolicy
+  type EquitableAccessPolicy,
+  type EthicalDecisionExplanation
 } from './resource-allocation';
 import {
   createSecureAccess,
@@ -99,7 +101,12 @@ export class QuantumEthicsFramework {
       purpose: string;
     },
     role: 'educational' | 'research' | 'commercial' | 'community'
-  ): { allocation?: ResourceAllocation; decision: AtomDecision; waveAnalysis: WaveAnalysisResult } {
+  ): { 
+    allocation?: ResourceAllocation; 
+    decision: AtomDecision; 
+    waveAnalysis: WaveAnalysisResult;
+    ethicalExplanation: EthicalDecisionExplanation;
+  } {
     // Create quota for user
     const quota = createResourceQuota(userId, role, this.config.resourcePolicy);
     
@@ -387,6 +394,20 @@ export class QuantumEthicsFramework {
   getProvenanceTrail(): TrailEntry[] {
     return [...this.trailEntries];
   }
+  
+  /**
+   * Get explanation of the ethical policy used by this framework
+   * Provides complete transparency into decision-making criteria
+   */
+  explainEthicalChoices(): {
+    summary: string;
+    principles: string[];
+    priorityJustification: Record<string, string>;
+    thresholdJustification: string;
+    userChoices: string[];
+  } {
+    return explainEthicalPolicy(this.config.resourcePolicy);
+  }
 }
 
 // Re-export key types and functions
@@ -395,8 +416,10 @@ export {
   type ResourceAllocation,
   type ResourceQuota,
   type EquitableAccessPolicy,
+  type EthicalDecisionExplanation,
   allocateResources,
   createResourceQuota,
+  explainEthicalPolicy,
   ResourceScheduler,
   
   // Privacy
