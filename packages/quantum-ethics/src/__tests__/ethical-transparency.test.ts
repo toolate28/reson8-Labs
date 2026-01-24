@@ -370,18 +370,18 @@ describe('Ethical Transparency', () => {
       expect(quota.maxAllocations).toBe(350);
     });
 
-    test('throws error when max allocations (350) is reached', () => {
+    test('throws error when max active allocations (350) is reached', () => {
       const userId = 'limit-user';
       const quota = createResourceQuota(userId, 'educational', DEFAULT_POLICY);
       
-      // Create 350 previous allocations to reach the limit
+      // Create 350 active allocations (running status) to reach the limit
       const maxAllocations = Array.from({ length: 350 }, (_, i) => ({
         allocationId: `alloc-${i}`,
         userId,
         qubits: 5,
         gateDepth: 10,
         estimatedTimeMs: 1000,
-        status: 'completed' as const,
+        status: 'running' as const, // Active status counts against limit
         createdAt: new Date(Date.now() - 1000 * (i + 1)).toISOString(),
         fairnessScore: 0.9
       }));
@@ -395,21 +395,21 @@ describe('Ethical Transparency', () => {
 
       expect(() => {
         allocateResources(userId, request, quota, maxAllocations, DEFAULT_POLICY);
-      }).toThrow(/Maximum allocations \(350\) reached/);
+      }).toThrow(/Maximum active allocations \(350\) reached/);
     });
 
-    test('allows allocation when under 350 limit', () => {
+    test('allows allocation when completed allocations exist but under active limit', () => {
       const userId = 'under-limit-user';
       const quota = createResourceQuota(userId, 'educational', DEFAULT_POLICY);
       
-      // Create 349 previous allocations (one under the limit)
-      const previousAllocations = Array.from({ length: 349 }, (_, i) => ({
+      // Create 400 completed allocations - these should NOT count against the limit
+      const previousAllocations = Array.from({ length: 400 }, (_, i) => ({
         allocationId: `alloc-${i}`,
         userId,
         qubits: 5,
         gateDepth: 10,
         estimatedTimeMs: 1000,
-        status: 'completed' as const,
+        status: 'completed' as const, // Completed allocations don't count against limit
         createdAt: new Date(Date.now() - 86400000 - 1000 * (i + 1)).toISOString(), // More than 24h ago for fairness
         fairnessScore: 0.9
       }));
@@ -421,8 +421,48 @@ describe('Ethical Transparency', () => {
         purpose: 'Research quantum algorithms for molecular simulation with variational quantum eigensolver methods'
       };
 
-      // Should not throw, allocation should proceed
+      // Should not throw, allocation should proceed since completed don't count
       const result = allocateResources(userId, request, quota, previousAllocations, DEFAULT_POLICY);
+      expect(result.allocation).toBeDefined();
+      expect(result.ethicalExplanation.decision).toBe('approved');
+    });
+
+    test('allows allocation when under 350 active allocations', () => {
+      const userId = 'mixed-status-user';
+      const quota = createResourceQuota(userId, 'educational', DEFAULT_POLICY);
+      
+      // Create mix of 349 active and 100 completed allocations
+      const activeAllocations = Array.from({ length: 349 }, (_, i) => ({
+        allocationId: `active-${i}`,
+        userId,
+        qubits: 5,
+        gateDepth: 10,
+        estimatedTimeMs: 1000,
+        status: 'pending' as const, // Active status
+        createdAt: new Date(Date.now() - 86400000 - 1000 * (i + 1)).toISOString(),
+        fairnessScore: 0.9
+      }));
+      
+      const completedAllocations = Array.from({ length: 100 }, (_, i) => ({
+        allocationId: `completed-${i}`,
+        userId,
+        qubits: 5,
+        gateDepth: 10,
+        estimatedTimeMs: 1000,
+        status: 'completed' as const, // Completed - doesn't count
+        createdAt: new Date(Date.now() - 86400000 - 1000 * (i + 1)).toISOString(),
+        fairnessScore: 0.9
+      }));
+
+      const request = {
+        qubits: 5,
+        gateDepth: 10,
+        estimatedTimeMs: 1000,
+        purpose: 'Research quantum algorithms for molecular simulation with variational quantum eigensolver methods'
+      };
+
+      // Should work since only 349 are active (under 350 limit)
+      const result = allocateResources(userId, request, quota, [...activeAllocations, ...completedAllocations], DEFAULT_POLICY);
       expect(result.allocation).toBeDefined();
       expect(result.ethicalExplanation.decision).toBe('approved');
     });

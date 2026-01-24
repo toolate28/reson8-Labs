@@ -148,9 +148,13 @@ export function allocateResources(
   }
   
   // Validate against max allocations limit (350 allowed)
-  const userAllocations = previousAllocations.filter(a => a.userId === userId);
-  if (userAllocations.length >= quota.maxAllocations) {
-    throw new Error(`Maximum allocations (${quota.maxAllocations}) reached for user ${userId}. You have used ${userAllocations.length} of ${quota.maxAllocations} allowed allocations.`);
+  // Only count active allocations (pending, allocated, running) - not completed or failed ones
+  const activeAllocations = previousAllocations.filter(
+    a => a.userId === userId && 
+    (a.status === 'pending' || a.status === 'allocated' || a.status === 'running')
+  );
+  if (activeAllocations.length >= quota.maxAllocations) {
+    throw new Error(`Maximum active allocations (${quota.maxAllocations}) reached for user ${userId}. You have ${activeAllocations.length} active allocations out of ${quota.maxAllocations} allowed.`);
   }
   
   // Analyze purpose for coherence
