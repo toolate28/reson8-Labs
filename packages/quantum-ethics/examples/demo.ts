@@ -24,6 +24,16 @@ const framework = new QuantumEthicsFramework({
 
 console.log('✓ Framework initialized with 70% coherence baseline\n');
 
+// 1.5. View ethical policy transparency
+console.log('--- Ethical Policy Transparency ---');
+const policyExplanation = framework.explainEthicalChoices();
+console.log(`${policyExplanation.summary}\n`);
+console.log('Core Principles:');
+policyExplanation.principles.forEach(p => console.log(`  • ${p}`));
+console.log('\nYour Choices as a User:');
+policyExplanation.userChoices.forEach(c => console.log(`  • ${c}`));
+console.log(`\n${policyExplanation.thresholdJustification}\n`);
+
 // 2. Request resources (educational user)
 console.log('--- Resource Allocation ---');
 const resourceRequest = {
@@ -33,7 +43,7 @@ const resourceRequest = {
   purpose: 'Research quantum machine learning algorithms for optimizing molecular properties in drug discovery, with focus on improving prediction accuracy for protein-ligand binding affinity'
 };
 
-const { allocation, decision, waveAnalysis } = framework.requestResources(
+const { allocation, decision, waveAnalysis, ethicalExplanation } = framework.requestResources(
   'student-456',
   resourceRequest,
   'educational'
@@ -49,8 +59,24 @@ if (allocation) {
   console.log(`    - Curl (circular reasoning): ${waveAnalysis.coherence.curl.toFixed(3)}`);
   console.log(`    - Divergence (expansion): ${waveAnalysis.coherence.divergence.toFixed(3)}`);
   console.log(`    - Potential (structure): ${waveAnalysis.coherence.potential.toFixed(3)}`);
+  console.log(`\n  Ethical Decision Transparency:`);
+  console.log(`    Decision: ${ethicalExplanation.decision}`);
+  console.log(`    Reasoning: ${ethicalExplanation.reasoning}`);
+  console.log(`    Applied Principles:`);
+  ethicalExplanation.ethicalPrinciples.forEach(p => console.log(`      • ${p}`));
+  console.log(`    Your Rights:`);
+  ethicalExplanation.userRights.forEach(r => console.log(`      • ${r}`));
 } else {
   console.log(`✗ Resources denied: ${decision.description}`);
+  console.log(`\n  Ethical Decision Transparency:`);
+  console.log(`    Decision: ${ethicalExplanation.decision}`);
+  console.log(`    Reasoning: ${ethicalExplanation.reasoning}`);
+  if (ethicalExplanation.alternativeOptions && ethicalExplanation.alternativeOptions.length > 0) {
+    console.log(`    Alternative Options:`);
+    ethicalExplanation.alternativeOptions.forEach(opt => console.log(`      • ${opt}`));
+  }
+  console.log(`    Your Rights:`);
+  ethicalExplanation.userRights.forEach(r => console.log(`      • ${r}`));
 }
 console.log();
 
