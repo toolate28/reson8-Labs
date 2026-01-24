@@ -361,4 +361,70 @@ describe('Ethical Transparency', () => {
       expect(hasAppealRight).toBe(true);
     });
   });
+
+  describe('Max Allocations Limit', () => {
+    test('quota includes maxAllocations of 350', () => {
+      const userId = 'max-alloc-user';
+      const quota = createResourceQuota(userId, 'research', DEFAULT_POLICY);
+      
+      expect(quota.maxAllocations).toBe(350);
+    });
+
+    test('throws error when max allocations (350) is reached', () => {
+      const userId = 'limit-user';
+      const quota = createResourceQuota(userId, 'educational', DEFAULT_POLICY);
+      
+      // Create 350 previous allocations to reach the limit
+      const maxAllocations = Array.from({ length: 350 }, (_, i) => ({
+        allocationId: `alloc-${i}`,
+        userId,
+        qubits: 5,
+        gateDepth: 10,
+        estimatedTimeMs: 1000,
+        status: 'completed' as const,
+        createdAt: new Date(Date.now() - 1000 * (i + 1)).toISOString(),
+        fairnessScore: 0.9
+      }));
+
+      const request = {
+        qubits: 5,
+        gateDepth: 10,
+        estimatedTimeMs: 1000,
+        purpose: 'Test request that should be rejected due to max allocations limit'
+      };
+
+      expect(() => {
+        allocateResources(userId, request, quota, maxAllocations, DEFAULT_POLICY);
+      }).toThrow(/Maximum allocations \(350\) reached/);
+    });
+
+    test('allows allocation when under 350 limit', () => {
+      const userId = 'under-limit-user';
+      const quota = createResourceQuota(userId, 'educational', DEFAULT_POLICY);
+      
+      // Create 349 previous allocations (one under the limit)
+      const previousAllocations = Array.from({ length: 349 }, (_, i) => ({
+        allocationId: `alloc-${i}`,
+        userId,
+        qubits: 5,
+        gateDepth: 10,
+        estimatedTimeMs: 1000,
+        status: 'completed' as const,
+        createdAt: new Date(Date.now() - 86400000 - 1000 * (i + 1)).toISOString(), // More than 24h ago for fairness
+        fairnessScore: 0.9
+      }));
+
+      const request = {
+        qubits: 5,
+        gateDepth: 10,
+        estimatedTimeMs: 1000,
+        purpose: 'Research quantum algorithms for molecular simulation with variational quantum eigensolver methods'
+      };
+
+      // Should not throw, allocation should proceed
+      const result = allocateResources(userId, request, quota, previousAllocations, DEFAULT_POLICY);
+      expect(result.allocation).toBeDefined();
+      expect(result.ethicalExplanation.decision).toBe('approved');
+    });
+  });
 });
