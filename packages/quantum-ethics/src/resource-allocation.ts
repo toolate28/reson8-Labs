@@ -169,7 +169,7 @@ export function allocateResources(
       metrics: {
         fairnessScore: 0, // Not relevant for coherence-based rejection; fairness not yet evaluated
         coherenceScore: waveAnalysis.coherence_score,
-        priorityWeight: 0
+        priorityWeight: policy.priorityWeights[quota.role] ?? 0
       },
       alternativeOptions: [
         'Revise your purpose statement to be more specific and structured',
@@ -229,7 +229,7 @@ export function allocateResources(
       metrics: {
         fairnessScore: fairnessScore,
         coherenceScore: waveAnalysis.coherence_score,
-        priorityWeight: 0
+        priorityWeight: policy.priorityWeights[quota.role] ?? 0
       },
       alternativeOptions: [
         `Wait approximately ${hoursUntilReset} hours for your usage window to reset`,
@@ -269,7 +269,7 @@ export function allocateResources(
   
   const ethicalExplanation: EthicalDecisionExplanation = {
     decision: 'approved',
-    reasoning: `Your request has been approved with ${(fairnessScore * 100).toFixed(1)}% fairness score and ${waveAnalysis.coherence_score.toFixed(1)}% coherence. You are allocated ${request.qubits} qubits for up to ${(request.estimatedTimeMs / 60000).toFixed(1)} minutes. Your ${quota.priority} priority weighting is ${priorityWeight}x based on your role.`,
+    reasoning: `Your request has been approved with ${(fairnessScore * 100).toFixed(1)}% fairness score and ${waveAnalysis.coherence_score.toFixed(1)}% coherence. You are allocated ${request.qubits} qubits for up to ${(request.estimatedTimeMs / 60000).toFixed(1)} minutes. Your '${quota.role}' role has a priority weighting of ${priorityWeight}x.`,
     ethicalPrinciples: [
       'Earned Access: Your fairness score reflects responsible prior usage',
       'Quality Standards: Your purpose meets our coherence baseline for beneficial use',

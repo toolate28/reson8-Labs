@@ -87,10 +87,12 @@ Alternative Options:
   • Use the native TypeScript quantum simulator for prototyping
 
 Your Rights:
-  • Your request enters a fair queue and will be processed when your 
-    fairness score improves
-  • You can monitor queue position through the framework status API
-  • You retain all future access rights - this is temporary throttling only
+  • Your request is temporarily deferred based on your recent usage and 
+    current fairness score
+  • You may resubmit this request once your recent usage normalizes and your
+    fairness score improves; you retain all future access rights
+  • You can inspect your fairness-related status through the framework status API
+  • This is temporary throttling only - you retain all future access rights
 ```
 
 ### 3. Policy Explanation Function
