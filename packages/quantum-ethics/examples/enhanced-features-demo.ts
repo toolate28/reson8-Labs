@@ -150,7 +150,9 @@ if (allocation) {
   console.log(`  Allocation ID: ${resourceProvenance.allocationId}`);
   console.log(`  Fairness score: ${resourceProvenance.fairnessScore.toFixed(2)}`);
   console.log(`  Coherence score: ${resourceProvenance.coherenceScore}%`);
-  console.log(`  ATOM tag: ${resourceProvenance.atomDecision.atom_tag}\n`);
+  console.log(`  ATOM tag: ${resourceProvenance.atomDecision.atom_tag}`);
+  console.log(`  Ethical Decision: ${ethicalExplanation.decision}`);
+  console.log(`  Reasoning: ${ethicalExplanation.reasoning}\n`);
 }
 
 // 7. Provenance Audit Trail
