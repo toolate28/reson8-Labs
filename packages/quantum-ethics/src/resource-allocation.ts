@@ -30,12 +30,18 @@ export interface EthicalDecisionExplanation {
   userRights: string[];
 }
 
+/**
+ * Maximum number of allocations allowed per user quota
+ */
+export const MAX_ALLOCATIONS_LIMIT = 350;
+
 export interface ResourceQuota {
   userId: string;
   role: 'educational' | 'research' | 'commercial' | 'community';
   maxQubits: number;
   maxGateDepth: number;
   maxExecutionTimeMs: number;
+  maxAllocations: number; // Maximum number of allocations allowed (default: 350)
   priority: 'low' | 'medium' | 'high' | 'critical';
   allocatedAt: string;
   expiresAt?: string;
@@ -142,6 +148,16 @@ export function allocateResources(
     throw new Error(`Requested time (${request.estimatedTimeMs}ms) exceeds quota (${quota.maxExecutionTimeMs}ms)`);
   }
   
+  // Validate against max allocations limit (350 allowed)
+  // Only count active allocations (pending, allocated, running) - not completed or failed ones
+  const activeAllocations = previousAllocations.filter(
+    a => a.userId === userId && 
+    (a.status === 'pending' || a.status === 'allocated' || a.status === 'running')
+  );
+  if (activeAllocations.length >= quota.maxAllocations) {
+    throw new Error(`Maximum active allocations (${quota.maxAllocations}) reached for user ${userId}. You have ${activeAllocations.length} active allocations out of ${quota.maxAllocations} allowed.`);
+  }
+  
   // Analyze purpose for coherence
   const waveAnalysis = analyzeWave(request.purpose);
   
@@ -178,8 +194,8 @@ export function allocateResources(
       ],
       userRights: [
         'You can resubmit with an improved purpose statement at any time',
-        'You can view the coherence metrics (curl, divergence, potential, entropy) to understand the assessment',
-        'You can contact support if you believe this is a critical use case requiring urgent review'
+        'You can request manual review by adding "coherence-override" if this is urgent',
+        'You can view the coherence metrics (curl, divergence, potential, entropy) to understand the assessment'
       ]
     };
     
@@ -207,12 +223,6 @@ export function allocateResources(
     const totalRecentQubits = recentUsage.reduce((sum, a) => sum + a.qubits, 0);
     const totalRecentTimeMs = recentUsage.reduce((sum, a) => sum + a.estimatedTimeMs, 0);
     
-    // Find the oldest usage to calculate accurate wait time
-    const oldestUsageTime = recentUsage.length > 0
-      ? Math.min(...recentUsage.map(a => new Date(a.createdAt).getTime()))
-      : Date.now();
-    const hoursUntilReset = Math.max(1, Math.ceil((86400000 - (Date.now() - oldestUsageTime)) / 3600000));
-    
     const ethicalExplanation: EthicalDecisionExplanation = {
       decision: 'deferred',
       reasoning: `Your fairness score is ${(fairnessScore * 100).toFixed(1)}%, below our ${(policy.minFairnessScore * 100)}% minimum. This is based on your recent usage: ${totalRecentQubits} qubits over ${(totalRecentTimeMs / 60000).toFixed(1)} minutes in the last 24 hours. We defer to ensure equitable access for all users.`,
@@ -232,13 +242,13 @@ export function allocateResources(
         priorityWeight: policy.priorityWeights[quota.role] ?? 0
       },
       alternativeOptions: [
-        `Wait approximately ${hoursUntilReset} hours for your usage window to reset`,
+        `Wait ${Math.max(1, Math.ceil((86400000 - (Date.now() - new Date(recentUsage[0]?.createdAt || Date.now()).getTime())) / 3600000))} hours for your usage window to reset`,
         'Request a smaller allocation that fits within fairness constraints',
         'Use the native TypeScript quantum simulator for prototyping instead'
       ],
       userRights: [
-        'Your request is temporarily deferred based on fairness constraints and can be retried once your recent usage normalizes',
-        'You can inspect your fairness-related status and recent-usage impact through the framework status API',
+        'Your request enters a fair queue and will be processed when your fairness score improves',
+        'You can monitor queue position through the framework status API',
         'You retain all future access rights - this is temporary throttling only'
       ]
     };
@@ -265,7 +275,10 @@ export function allocateResources(
     ['resource-allocation', 'approved', `coherence-${waveAnalysis.coherence_score}`]
   );
   
-  const priorityWeight = policy.priorityWeights[quota.role];
+  const priorityWeight = policy.priorityWeights[
+    quota.priority === 'high' ? 'educational' : 
+    quota.priority === 'medium' ? 'research' : 'commercial'
+  ] || 1.0;
   
   const ethicalExplanation: EthicalDecisionExplanation = {
     decision: 'approved',
@@ -290,7 +303,7 @@ export function allocateResources(
     userRights: [
       'You may use these resources for your stated purpose only',
       'You can view real-time execution progress through the provenance tracker',
-      'Your measurement data is protected using strict access controls and privacy safeguards',
+      'You maintain privacy through differential privacy protections on all measurements',
       'You can request a larger allocation once your fairness score improves'
     ]
   };
@@ -314,6 +327,7 @@ export function createResourceQuota(
     maxQubits: Math.floor(50 * weight),
     maxGateDepth: Math.floor(100 * weight),
     maxExecutionTimeMs: Math.floor(3600000 * weight), // 1 hour base
+    maxAllocations: MAX_ALLOCATIONS_LIMIT, // 350 allocations allowed
     priority: weight > 1.2 ? 'high' : weight > 1.0 ? 'medium' : 'low',
     allocatedAt: new Date().toISOString()
   };
@@ -381,11 +395,11 @@ export function explainEthicalPolicy(
     summary: `${policy.name}: ${policy.description}. This policy embodies our commitment to equitable quantum computing access while maintaining quality standards.`,
     principles: [
       'Equitable Access: All users receive fair opportunity regardless of affiliation or resources',
-      `Educational Priority: Learning and research advance collective knowledge and receive elevated weight (educational ${policy.priorityWeights.educational}x, research ${policy.priorityWeights.research}x)`,
-      `Quality Baseline: ${policy.coherenceThreshold}% coherence threshold ensures resources serve clear, beneficial purposes`,
+      'Educational Priority: Learning and research advance collective knowledge and receive 1.3-1.5x weight',
+      'Quality Baseline: 70% coherence threshold ensures resources serve clear, beneficial purposes',
       'Fairness Scoring: Recent usage affects priority to prevent monopolization',
       'Transparent Metrics: All decisions show calculations and can be audited',
-      'User Rights: Resubmissions and support escalations are always available'
+      'User Rights: Appeals, overrides, and resubmissions are always available'
     ],
     priorityJustification: {
       educational: `Weight ${policy.priorityWeights.educational}x - Education creates future quantum scientists and democratizes access to quantum knowledge. Higher priority serves long-term community growth.`,
@@ -398,7 +412,7 @@ export function explainEthicalPolicy(
       'Choose your role honestly - educational/research users get priority',
       'Write clear purpose statements - coherence is measurable and improves with structure',
       'Distribute usage over time - fairness scores reward sustainable access patterns',
-      'Contact support for critical use cases requiring urgent review',
+      'Request manual review - coherence-override available for urgent cases',
       'View all metrics - transparency enables informed resubmissions',
       'Use alternatives - native TypeScript simulator available for prototyping'
     ]
