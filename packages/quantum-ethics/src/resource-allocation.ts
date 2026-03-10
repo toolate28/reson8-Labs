@@ -239,7 +239,7 @@ export function allocateResources(
       metrics: {
         fairnessScore: fairnessScore,
         coherenceScore: waveAnalysis.coherence_score,
-        priorityWeight: 0
+        priorityWeight: policy.priorityWeights[quota.role] ?? 0
       },
       alternativeOptions: [
         `Wait ${Math.max(1, Math.ceil((86400000 - (Date.now() - new Date(recentUsage[0]?.createdAt || Date.now()).getTime())) / 3600000))} hours for your usage window to reset`,
