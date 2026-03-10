@@ -91,6 +91,8 @@ Your Rights:
     current fairness score
   • You may resubmit this request once your recent usage normalizes and your
     fairness score improves; you retain all future access rights
+  • You can inspect your fairness-related status through the framework status API
+  • This is temporary throttling only - you retain all future access rights
 ```
 
 ### 3. Policy Explanation Function

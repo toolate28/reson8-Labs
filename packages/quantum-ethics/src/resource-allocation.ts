@@ -185,7 +185,7 @@ export function allocateResources(
       metrics: {
         fairnessScore: 0, // Not relevant for coherence-based rejection; fairness not yet evaluated
         coherenceScore: waveAnalysis.coherence_score,
-        priorityWeight: 0
+        priorityWeight: policy.priorityWeights[quota.role] ?? 0
       },
       alternativeOptions: [
         'Revise your purpose statement to be more specific and structured',
