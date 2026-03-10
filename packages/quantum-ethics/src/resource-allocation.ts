@@ -37,6 +37,7 @@ export const MAX_ALLOCATIONS_LIMIT = 350;
 
 export interface ResourceQuota {
   userId: string;
+  role: 'educational' | 'research' | 'commercial' | 'community';
   maxQubits: number;
   maxGateDepth: number;
   maxExecutionTimeMs: number;
@@ -238,7 +239,7 @@ export function allocateResources(
       metrics: {
         fairnessScore: fairnessScore,
         coherenceScore: waveAnalysis.coherence_score,
-        priorityWeight: 0
+        priorityWeight: policy.priorityWeights[quota.role] ?? 0
       },
       alternativeOptions: [
         `Wait ${Math.max(1, Math.ceil((86400000 - (Date.now() - new Date(recentUsage[0]?.createdAt || Date.now()).getTime())) / 3600000))} hours for your usage window to reset`,
@@ -281,7 +282,7 @@ export function allocateResources(
   
   const ethicalExplanation: EthicalDecisionExplanation = {
     decision: 'approved',
-    reasoning: `Your request has been approved with ${(fairnessScore * 100).toFixed(1)}% fairness score and ${waveAnalysis.coherence_score.toFixed(1)}% coherence. You are allocated ${request.qubits} qubits for up to ${(request.estimatedTimeMs / 60000).toFixed(1)} minutes. Your ${quota.priority} priority weighting is ${priorityWeight}x based on your role.`,
+    reasoning: `Your request has been approved with ${(fairnessScore * 100).toFixed(1)}% fairness score and ${waveAnalysis.coherence_score.toFixed(1)}% coherence. You are allocated ${request.qubits} qubits for up to ${(request.estimatedTimeMs / 60000).toFixed(1)} minutes. Your '${quota.role}' role has a priority weighting of ${priorityWeight}x.`,
     ethicalPrinciples: [
       'Earned Access: Your fairness score reflects responsible prior usage',
       'Quality Standards: Your purpose meets our coherence baseline for beneficial use',
@@ -322,6 +323,7 @@ export function createResourceQuota(
   
   return {
     userId,
+    role,
     maxQubits: Math.floor(50 * weight),
     maxGateDepth: Math.floor(100 * weight),
     maxExecutionTimeMs: Math.floor(3600000 * weight), // 1 hour base
