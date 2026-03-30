@@ -12,6 +12,6 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@ax-llm/ax": "^19.0.16"
+    "@ax-llm/ax": "^19.0.28"
   }
 }
